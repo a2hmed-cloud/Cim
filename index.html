@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة أحمد التعليمية والموسيقية</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #161e2e;
+            --bg-card-hover: #1f2937;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: rgba(22, 30, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* نافذة العرض الرئيسية */
+        .player-section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .player-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            background: #000;
+        }
+
+        .player-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .player-info {
+            padding: 20px;
+        }
+
+        .player-info h2 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .player-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        /* قائمة الروابط */
+        .playlist-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            padding-right: 5px;
+            border-right: 3px solid var(--accent);
+        }
+
+        .video-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .video-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        .video-card.active {
+            border-color: var(--accent);
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .video-thumb {
+            width: 100px;
+            height: 60px;
+            border-radius: 6px;
+            object-fit: cover;
+            background: #000;
+            flex-shrink: 0;
+        }
+
+        .video-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .video-title-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.3;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+        }
+
+        .external-link {
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .external-link:hover {
+            text-decoration: underline;
+            color: var(--accent-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>منصتي الذكية للفيديوهات</h1>
+        <p>نظم فيديوهاتك المفضلة وتصفحها بسلاسة من مكان واحد</p>
+    </header>
+
+    <div class="container">
+        <!-- مشغل الفيديو الأساسي -->
+        <div class="player-section">
+            <div class="player-wrapper">
+                <iframe id="mainPlayer" src="" allowfullscreen></iframe>
+            </div>
+            <div class="player-info">
+                <h2 id="currentTitle">اختر فيديو من القائمة لبدء التشغيل</h2>
+                <p id="currentDesc">اضغط على أي فيديو في القائمة الجانبية لعرضه هنا وتشغيله مباشرة.</p>
+                <a id="externalBtn" href="#" target="_blank" class="external-link" style="display:none;">
+                    🔗 فتح الفيديو على تطبيق يوتيوب / المتصفح الخارجي
+                </a>
+            </div>
+        </div>
+
+        <!-- قائمة الفيديوهات -->
+        <div class="playlist-section">
+            <div class="section-title">قائمة التشغيل والمحفوظات</div>
+            <div id="playlistContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // قاعدة البيانات المنظمة بالفيديوهات وأسمائها وتصنيفاتها
+        const videos = [
+            {
+                id: "tLfmappSCa8",
+                title: "مقطع موسيقي / إيقاع (1)",
+                category: "موسيقى وإيقاعات"
+            },
+            {
+                id: "r0UhFLB8cdk",
+                title: "مقطع موسيقي / إيقاع (2)",
+                category: "موسيقى وإيقاعات"
+            },
+            {
+                id: "MM9IhSjT4ZU",
+                title: "فيديو برمجي وتطوير واجهات (Front-End)",
+                category: "برمجة وتطوير"
+            },
+            {
+                id: "zO7w0qvEDWU",
+                title: "فيديو مرجعي تفاعلي (مفضل)",
+                category: "محتوى تقني/دراسي"
+            },
+            {
+                id: "TlqRz_X1azc",
+                title: "درس أو شرح تعليمي مرجعي",
+                category: "تعليم ودراسة"
+            },
+            {
+                id: "nKrNZ1hTwqQ",
+                title: "مراجعة أو محتوى أكاديمي",
+                category: "تعليم ودراسة"
+            },
+            {
+                id: "6iC9EcP8BS4",
+                title: "فيديو تقني / مراجعة إضافية",
+                category: "محتوى عام"
+            }
+        ];
+
+        const mainPlayer = document.getElementById('mainPlayer');
+        const currentTitle = document.getElementById('currentTitle');
+        const currentDesc = document.getElementById('currentDesc');
+        const externalBtn = document.getElementById('externalBtn');
+        const playlistContainer = document.getElementById('playlistContainer');
+
+        function playVideo(index) {
+            const video = videos[index];
+            
+            // تحديث المشغل
+            mainPlayer.src = `https://www.youtube.com/embed/${video.id}?autoplay=1`;
+            currentTitle.textContent = video.title;
+            currentDesc.textContent = `التصنيف: ${video.category}`;
+            
+            // تفعيل زر الفتح الخارجي
+            externalBtn.href = `https://youtu.be/${video.id}`;
+            externalBtn.style.display = 'inline-flex';
+
+            // تحديث الكارت النشط في القائمة
+            document.querySelectorAll('.video-card').forEach((card, i) => {
+                if (i === index) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        }
+
+        function renderPlaylist() {
+            playlistContainer.innerHTML = '';
+            videos.forEach((video, index) => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.onclick = () => playVideo(index);
+                
+                card.innerHTML = `
+                    <img class="video-thumb" src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="thumbnail">
+                    <div class="video-details">
+                        <div class="video-title-text">${video.title}</div>
+                        <div class="card-actions">
+                            <span class="badge">${video.category}</span>
+                            <a href="https://youtu.be/${video.id}" target="_blank" class="external-link" onclick="event.stopPropagation()">خارجي ↗</a>
+                        </div>
+                    </div>
+                `;
+                playlistContainer.appendChild(card);
+            });
+        }
+
+        // تهيئة الصفحة وتشغيل أول فيديو افتراضياً
+        renderPlaylist();
+        playVideo(0);
+    </script>
+</body>
+</html>
