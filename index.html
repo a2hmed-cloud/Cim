@@ -1,335 +1,1122 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة أحمد التعليمية والموسيقية</title>
-    <style>
-        :root {
-            --bg-main: #0b0f19;
-            --bg-card: #161e2e;
-            --bg-card-hover: #1f2937;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --accent: #38bdf8;
-            --accent-hover: #0ea5e9;
-            --danger: #ef4444;
-            --danger-hover: #dc2626;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StudyHub | منصة المذاكرة</title>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<style>
+:root{
+  --bg:#080b12;
+  --panel:#111722;
+  --panel2:#171e2b;
+  --text:#f4f7fb;
+  --muted:#8d98aa;
+  --accent:#55b8ff;
+  --accent2:#7c6cff;
+  --line:rgba(255,255,255,.08);
+  --green:#35d39a;
+}
 
-        body {
-            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-        header {
-            background: rgba(22, 30, 46, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 80% -10%,rgba(85,184,255,.12),transparent 30%),
+    var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
 
-        header h1 {
-            font-size: 1.5rem;
-            color: var(--accent);
-            margin-bottom: 5px;
-        }
+button,input,textarea{
+  font:inherit;
+}
 
-        header p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
+button{
+  cursor:pointer;
+}
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-            flex: 1;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 20px;
-        }
+.header{
+  position:sticky;
+  top:0;
+  z-index:50;
+  height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  background:rgba(8,11,18,.82);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line);
+}
 
-        @media (max-width: 900px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-        }
+.logo{
+  font-size:21px;
+  font-weight:800;
+}
 
-        /* نافذة العرض الرئيسية */
-        .player-section {
-            background: var(--bg-card);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            flex-direction: column;
-            height: fit-content;
-            position: sticky;
-            top: 100px;
-        }
+.logo span{
+  color:var(--accent);
+}
 
-        .player-wrapper {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            background: #000;
-        }
+.header-right{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
 
-        .player-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+.progress-mini{
+  color:var(--muted);
+  font-size:13px;
+}
 
-        .player-info {
-            padding: 20px;
-        }
+.container{
+  width:min(1450px,94%);
+  margin:auto;
+  padding:28px 0 50px;
+}
 
-        .player-info h2 {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-        }
+.hero{
+  padding:10px 0 28px;
+}
 
-        .player-info p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-        }
+.hero h1{
+  font-size:clamp(28px,5vw,48px);
+  line-height:1.1;
+  margin-bottom:10px;
+}
 
-        /* قائمة الروابط */
-        .playlist-section {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+.hero p{
+  color:var(--muted);
+}
 
-        .section-title {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            margin-bottom: 5px;
-            padding-right: 5px;
-            border-right: 3px solid var(--accent);
-        }
+.layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 360px;
+  gap:22px;
+}
 
-        .video-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 12px;
-            display: flex;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-        }
+.player-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:22px;
+  overflow:hidden;
+  position:sticky;
+  top:92px;
+}
 
-        .video-card:hover {
-            background: var(--bg-card-hover);
-            transform: translateY(-2px);
-            border-color: rgba(56, 189, 248, 0.3);
-        }
+.player{
+  position:relative;
+  aspect-ratio:16/9;
+  background:#000;
+}
 
-        .video-card.active {
-            border-color: var(--accent);
-            background: rgba(56, 189, 248, 0.05);
-        }
+.player iframe{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0;
+}
 
-        .video-thumb {
-            width: 100px;
-            height: 60px;
-            border-radius: 6px;
-            object-fit: cover;
-            background: #000;
-            flex-shrink: 0;
-        }
+.player-info{
+  padding:20px;
+}
 
-        .video-details {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+.player-info h2{
+  font-size:21px;
+  margin-bottom:7px;
+}
 
-        .video-title-text {
-            font-size: 0.95rem;
-            font-weight: 500;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            line-height: 1.3;
-        }
+.player-info p{
+  color:var(--muted);
+}
 
-        .card-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 6px;
-        }
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-top:17px;
+}
 
-        .badge {
-            font-size: 0.75rem;
-            padding: 2px 8px;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-        }
+.action{
+  border:1px solid var(--line);
+  background:var(--panel2);
+  color:var(--text);
+  padding:9px 13px;
+  border-radius:10px;
+}
 
-        .external-link {
-            font-size: 0.8rem;
-            color: var(--accent);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+.action:hover{
+  border-color:rgba(85,184,255,.5);
+}
 
-        .external-link:hover {
-            text-decoration: underline;
-            color: var(--accent-hover);
-        }
-    </style>
+.action.primary{
+  background:var(--accent);
+  color:#06101a;
+  border:0;
+  font-weight:700;
+}
+
+.progress-box{
+  margin-top:17px;
+}
+
+.progress-line{
+  height:7px;
+  background:#252d3a;
+  border-radius:99px;
+  overflow:hidden;
+}
+
+.progress-fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:.25s;
+}
+
+.progress-text{
+  display:flex;
+  justify-content:space-between;
+  margin-top:7px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  padding:0 20px 20px;
+  overflow:auto;
+}
+
+.tab{
+  white-space:nowrap;
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--muted);
+  padding:9px 14px;
+  border-radius:10px;
+}
+
+.tab.active{
+  color:white;
+  background:var(--panel2);
+  border-color:rgba(85,184,255,.35);
+}
+
+.panel{
+  display:none;
+  padding:0 20px 20px;
+}
+
+.panel.active{
+  display:block;
+}
+
+.note-area{
+  width:100%;
+  min-height:150px;
+  resize:vertical;
+  background:#0b1018;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:13px;
+  color:white;
+  outline:none;
+}
+
+.save-note{
+  margin-top:9px;
+}
+
+.chapter{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:12px;
+  margin-bottom:8px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:#0d131d;
+  cursor:pointer;
+}
+
+.chapter:hover{
+  background:var(--panel2);
+}
+
+.chapter-time{
+  color:var(--accent);
+  font-weight:700;
+  direction:ltr;
+}
+
+.playlist{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.playlist-title{
+  font-size:17px;
+  margin-bottom:4px;
+}
+
+.video-card{
+  display:flex;
+  gap:11px;
+  padding:10px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:15px;
+  cursor:pointer;
+  transition:.18s;
+}
+
+.video-card:hover{
+  transform:translateY(-1px);
+  background:var(--panel2);
+}
+
+.video-card.active{
+  border-color:rgba(85,184,255,.65);
+  box-shadow:0 0 0 1px rgba(85,184,255,.1);
+}
+
+.thumb{
+  width:120px;
+  height:68px;
+  object-fit:cover;
+  border-radius:9px;
+  background:#000;
+  flex-shrink:0;
+}
+
+.video-details{
+  min-width:0;
+  flex:1;
+}
+
+.video-title{
+  font-weight:700;
+  font-size:14px;
+  line-height:1.4;
+}
+
+.video-meta{
+  margin-top:7px;
+  display:flex;
+  justify-content:space-between;
+  gap:5px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.video-progress{
+  margin-top:7px;
+  height:4px;
+  background:#252d3a;
+  border-radius:99px;
+  overflow:hidden;
+}
+
+.video-progress div{
+  height:100%;
+  background:var(--green);
+  width:0;
+}
+
+.search{
+  width:100%;
+  background:#0c1119;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px 14px;
+  color:white;
+  outline:none;
+  margin-bottom:12px;
+}
+
+.section{
+  margin-top:28px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.stat{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:15px;
+}
+
+.stat strong{
+  display:block;
+  font-size:24px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.capture{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  padding:20px;
+}
+
+.capture.show{
+  display:flex;
+}
+
+.capture img{
+  max-width:95%;
+  max-height:85%;
+  border-radius:15px;
+}
+
+.close-capture{
+  position:absolute;
+  top:20px;
+  left:20px;
+  padding:10px 14px;
+  border:0;
+  border-radius:10px;
+}
+
+@media(max-width:1000px){
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .player-card{
+    position:relative;
+    top:0;
+  }
+}
+
+@media(max-width:600px){
+  .header{
+    padding:0 15px;
+  }
+
+  .container{
+    width:94%;
+  }
+
+  .thumb{
+    width:100px;
+    height:58px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+}
+</style>
 </head>
+
 <body>
 
-    <header>
-        <h1>منصتي الذكية للفيديوهات</h1>
-        <p>نظم فيديوهاتك المفضلة وتصفحها بسلاسة من مكان واحد</p>
-    </header>
+<header class="header">
+  <div class="logo">Study<span>Hub</span></div>
 
-    <div class="container">
-        <!-- مشغل الفيديو الأساسي -->
-        <div class="player-section">
-            <div class="player-wrapper">
-                <iframe id="mainPlayer" src="" allowfullscreen></iframe>
-            </div>
-            <div class="player-info">
-                <h2 id="currentTitle">اختر فيديو من القائمة لبدء التشغيل</h2>
-                <p id="currentDesc">اضغط على أي فيديو في القائمة الجانبية لعرضه هنا وتشغيله مباشرة.</p>
-                <a id="externalBtn" href="#" target="_blank" class="external-link" style="display:none;">
-                    🔗 فتح الفيديو على تطبيق يوتيوب / المتصفح الخارجي
-                </a>
-            </div>
+  <div class="header-right">
+    <div class="progress-mini" id="overallProgress">
+      0% مكتمل
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <h1>ذاكر بذكاء.</h1>
+    <p>كل فيديوهاتك في مكان واحد، مع متابعة تقدمك وملاحظاتك.</p>
+  </section>
+
+  <section class="layout">
+
+    <!-- المشغل -->
+    <div>
+
+      <div class="player-card">
+
+        <div class="player">
+          <iframe
+            id="player"
+            src=""
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowfullscreen>
+          </iframe>
         </div>
 
-        <!-- قائمة الفيديوهات -->
-        <div class="playlist-section">
-            <div class="section-title">قائمة التشغيل والمحفوظات</div>
-            <div id="playlistContainer"></div>
+        <div class="player-info">
+
+          <h2 id="currentTitle">اختر درسًا للبدء</h2>
+
+          <p id="currentCategory">
+            —
+          </p>
+
+          <div class="actions">
+
+            <button class="action primary" onclick="openYoutube()">
+              فتح على YouTube ↗
+            </button>
+
+            <button class="action" onclick="fullscreenPlayer()">
+              ⛶ ملء الشاشة
+            </button>
+
+            <button class="action" onclick="takeScreenshot()">
+              📸 لقطة شاشة
+            </button>
+
+            <button class="action" onclick="markComplete()">
+              ✓ إتمام الفيديو
+            </button>
+
+          </div>
+
+          <div class="progress-box">
+
+            <div class="progress-line">
+              <div class="progress-fill" id="mainProgress"></div>
+            </div>
+
+            <div class="progress-text">
+              <span>تقدم الدرس</span>
+              <span id="progressNumber">0%</span>
+            </div>
+
+          </div>
+
         </div>
+
+        <div class="tabs">
+
+          <button class="tab active" onclick="switchTab('chapters',this)">
+            Chapters
+          </button>
+
+          <button class="tab" onclick="switchTab('notes',this)">
+            ملاحظاتي
+          </button>
+
+          <button class="tab" onclick="switchTab('summary',this)">
+            مراجعة
+          </button>
+
+        </div>
+
+        <div class="panel active" id="chapters"></div>
+
+        <div class="panel" id="notes">
+
+          <textarea
+            id="noteArea"
+            class="note-area"
+            placeholder="اكتب ملاحظاتك عن هذا الفيديو هنا..."></textarea>
+
+          <button class="action primary save-note" onclick="saveNote()">
+            حفظ الملاحظات
+          </button>
+
+        </div>
+
+        <div class="panel" id="summary">
+
+          <div style="color:var(--muted);line-height:1.8">
+            استخدم هذا المكان لاحقًا لإضافة ملخص الدرس،
+            أهم القواعد، والأسئلة المهمة.
+          </div>
+
+        </div>
+
+      </div>
+
+      <section class="section">
+
+        <div class="stats">
+
+          <div class="stat">
+            <strong id="watchedCount">0</strong>
+            <span>فيديو مكتمل</span>
+          </div>
+
+          <div class="stat">
+            <strong id="videoCount">0</strong>
+            <span>إجمالي الفيديوهات</span>
+          </div>
+
+          <div class="stat">
+            <strong id="averageProgress">0%</strong>
+            <span>متوسط التقدم</span>
+          </div>
+
+        </div>
+
+      </section>
+
     </div>
 
-    <script>
-        // قاعدة البيانات المنظمة بالفيديوهات وأسمائها وتصنيفاتها
-        const videos = [
-            {
-                id: "tLfmappSCa8",
-                title: "مقطع موسيقي / إيقاع (1)",
-                category: "موسيقى وإيقاعات"
-            },
-            {
-                id: "r0UhFLB8cdk",
-                title: "مقطع موسيقي / إيقاع (2)",
-                category: "موسيقى وإيقاعات"
-            },
-            {
-                id: "MM9IhSjT4ZU",
-                title: "فيديو برمجي وتطوير واجهات (Front-End)",
-                category: "برمجة وتطوير"
-            },
-            {
-                id: "zO7w0qvEDWU",
-                title: "فيديو مرجعي تفاعلي (مفضل)",
-                category: "محتوى تقني/دراسي"
-            },
-            {
-                id: "TlqRz_X1azc",
-                title: "درس أو شرح تعليمي مرجعي",
-                category: "تعليم ودراسة"
-            },
-            {
-                id: "nKrNZ1hTwqQ",
-                title: "مراجعة أو محتوى أكاديمي",
-                category: "تعليم ودراسة"
-            },
-            {
-                id: "6iC9EcP8BS4",
-                title: "فيديو تقني / مراجعة إضافية",
-                category: "محتوى عام"
-            }
-        ];
+    <!-- القائمة -->
+    <aside>
 
-        const mainPlayer = document.getElementById('mainPlayer');
-        const currentTitle = document.getElementById('currentTitle');
-        const currentDesc = document.getElementById('currentDesc');
-        const externalBtn = document.getElementById('externalBtn');
-        const playlistContainer = document.getElementById('playlistContainer');
+      <input
+        class="search"
+        id="search"
+        placeholder="🔎 ابحث عن فيديو..."
+        oninput="renderPlaylist()">
 
-        function playVideo(index) {
-            const video = videos[index];
-            
-            // تحديث المشغل
-            mainPlayer.src = `https://www.youtube.com/embed/${video.id}?autoplay=1`;
-            currentTitle.textContent = video.title;
-            currentDesc.textContent = `التصنيف: ${video.category}`;
-            
-            // تفعيل زر الفتح الخارجي
-            externalBtn.href = `https://youtu.be/${video.id}`;
-            externalBtn.style.display = 'inline-flex';
+      <div class="playlist">
 
-            // تحديث الكارت النشط في القائمة
-            document.querySelectorAll('.video-card').forEach((card, i) => {
-                if (i === index) {
-                    card.classList.add('active');
-                } else {
-                    card.classList.remove('active');
-                }
-            });
-        }
+        <div class="playlist-title">
+          الدروس والفيديوهات
+        </div>
 
-        function renderPlaylist() {
-            playlistContainer.innerHTML = '';
-            videos.forEach((video, index) => {
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                card.onclick = () => playVideo(index);
-                
-                card.innerHTML = `
-                    <img class="video-thumb" src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="thumbnail">
-                    <div class="video-details">
-                        <div class="video-title-text">${video.title}</div>
-                        <div class="card-actions">
-                            <span class="badge">${video.category}</span>
-                            <a href="https://youtu.be/${video.id}" target="_blank" class="external-link" onclick="event.stopPropagation()">خارجي ↗</a>
-                        </div>
-                    </div>
-                `;
-                playlistContainer.appendChild(card);
-            });
-        }
+        <div id="playlistContainer"></div>
 
-        // تهيئة الصفحة وتشغيل أول فيديو افتراضياً
-        renderPlaylist();
-        playVideo(0);
-    </script>
+      </div>
+
+    </aside>
+
+  </section>
+
+</main>
+
+<!-- Screenshot -->
+<div class="capture" id="capture">
+
+  <button
+    class="close-capture"
+    onclick="closeCapture()">
+    إغلاق
+  </button>
+
+  <img id="captureImage" alt="Screenshot">
+
+</div>
+
+<script>
+
+/* =========================================
+   الفيديوهات
+========================================= */
+
+const videos = [
+
+  {
+    id:"tLfmappSCa8",
+    title:"الفيديو الأول",
+    category:"محتوى تعليمي",
+    chapters:[]
+  },
+
+  {
+    id:"r0UhFLB8cdk",
+    title:"الفيديو الثاني",
+    category:"محتوى تعليمي",
+    chapters:[]
+  },
+
+  {
+    id:"MM9IhSjT4ZU",
+    title:"الفيديو الثالث",
+    category:"محتوى تعليمي",
+    chapters:[]
+  },
+
+  {
+    id:"zO7wqvEDWU",
+    title:"الفيديو الرابع",
+    category:"محتوى تعليمي",
+    chapters:[]
+  },
+
+  {
+    id:"TlqRz_X1azc",
+    title:"الفيديو الخامس",
+    category:"محتوى تعليمي",
+    chapters:[]
+  },
+
+  {
+    id:"nKrNZ1hTwqQ",
+    title:"الفيديو السادس",
+    category:"محتوى تعليمي",
+    chapters:[]
+  },
+
+  {
+    id:"6iC9EcP8BS4",
+    title:"الفيديو السابع",
+    category:"محتوى تعليمي",
+    chapters:[]
+  }
+
+];
+
+/* =========================================
+   تصحيح ID الفيديو الرابع
+========================================= */
+
+videos[3].id = "zO7w0qvEDWU";
+
+
+let currentIndex = 0;
+
+
+/* =========================================
+   Local Storage
+========================================= */
+
+function getProgress(){
+
+  return JSON.parse(
+    localStorage.getItem("studyhub_progress") || "{}"
+  );
+
+}
+
+function saveProgress(data){
+
+  localStorage.setItem(
+    "studyhub_progress",
+    JSON.stringify(data)
+  );
+
+}
+
+function getNotes(){
+
+  return JSON.parse(
+    localStorage.getItem("studyhub_notes") || "{}"
+  );
+
+}
+
+
+/* =========================================
+   تشغيل الفيديو
+========================================= */
+
+function playVideo(index){
+
+  currentIndex = index;
+
+  const video = videos[index];
+
+  document.getElementById("player").src =
+    `https://www.youtube.com/embed/${video.id}?autoplay=1&rel=0`;
+
+  document.getElementById("currentTitle").textContent =
+    video.title;
+
+  document.getElementById("currentCategory").textContent =
+    video.category;
+
+  loadCurrentProgress();
+
+  loadNotes();
+
+  renderChapters();
+
+  renderPlaylist();
+
+}
+
+
+/* =========================================
+   Chapters
+========================================= */
+
+function renderChapters(){
+
+  const box = document.getElementById("chapters");
+
+  const video = videos[currentIndex];
+
+  if(!video.chapters.length){
+
+    box.innerHTML = `
+      <div style="
+        color:var(--muted);
+        padding:10px 0;
+        line-height:1.8
+      ">
+        لم يتم تحديد Chapters لهذا الفيديو بعد.
+        <br>
+        عند إضافة أوقات الأجزاء الفعلية للفيديو
+        ستظهر هنا تلقائيًا.
+      </div>
+    `;
+
+    return;
+
+  }
+
+  box.innerHTML = video.chapters.map(chapter => `
+
+    <div class="chapter"
+         onclick="jumpTo(${chapter.time})">
+
+      <span>${chapter.title}</span>
+
+      <span class="chapter-time">
+        ${formatTime(chapter.time)}
+      </span>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+/*
+  تشغيل Chapter:
+  YouTube embed لا يسمح دائمًا بالتحكم
+  في seek بدون YouTube IFrame API،
+  لذلك نحفظ البنية الآن ونضيف API لاحقًا.
+*/
+
+function jumpTo(seconds){
+
+  const video = videos[currentIndex];
+
+  document.getElementById("player").src =
+    `https://www.youtube.com/embed/${video.id}?autoplay=1&start=${seconds}&rel=0`;
+
+}
+
+
+/* =========================================
+   Progress
+========================================= */
+
+function loadCurrentProgress(){
+
+  const progress = getProgress();
+
+  const value =
+    Number(progress[videos[currentIndex].id] || 0);
+
+  document.getElementById("mainProgress").style.width =
+    value + "%";
+
+  document.getElementById("progressNumber").textContent =
+    value + "%";
+
+}
+
+
+function markComplete(){
+
+  const progress = getProgress();
+
+  progress[videos[currentIndex].id] = 100;
+
+  saveProgress(progress);
+
+  loadCurrentProgress();
+
+  renderPlaylist();
+
+  updateStats();
+
+}
+
+
+/* =========================================
+   Playlist
+========================================= */
+
+function renderPlaylist(){
+
+  const search =
+    document.getElementById("search").value
+      .trim()
+      .toLowerCase();
+
+  const progress = getProgress();
+
+  const container =
+    document.getElementById("playlistContainer");
+
+  container.innerHTML = "";
+
+  videos
+    .map((video,index)=>({video,index}))
+    .filter(item =>
+      item.video.title.toLowerCase().includes(search)
+    )
+    .forEach(({video,index})=>{
+
+      const value =
+        Number(progress[video.id] || 0);
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "video-card" +
+        (index === currentIndex ? " active" : "");
+
+      card.onclick =
+        () => playVideo(index);
+
+      card.innerHTML = `
+
+        <img
+          class="thumb"
+          src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg"
+          alt="thumbnail">
+
+        <div class="video-details">
+
+          <div class="video-title">
+            ${video.title}
+          </div>
+
+          <div class="video-meta">
+
+            <span>
+              ${video.category}
+            </span>
+
+            <span>
+              ${value}%
+            </span>
+
+          </div>
+
+          <div class="video-progress">
+            <div style="width:${value}%"></div>
+          </div>
+
+        </div>
+
+      `;
+
+      container.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================
+   Notes
+========================================= */
+
+function loadNotes(){
+
+  const notes = getNotes();
+
+  document.getElementById("noteArea").value =
+    notes[videos[currentIndex].id] || "";
+
+}
+
+
+function saveNote(){
+
+  const notes = getNotes();
+
+  notes[videos[currentIndex].id] =
+    document.getElementById("noteArea").value;
+
+  localStorage.setItem(
+    "studyhub_notes",
+    JSON.stringify(notes)
+  );
+
+}
+
+
+/* =========================================
+   Tabs
+========================================= */
+
+function switchTab(name,button){
+
+  document
+    .querySelectorAll(".panel")
+    .forEach(panel =>
+      panel.classList.remove("active")
+    );
+
+  document
+    .querySelectorAll(".tab")
+    .forEach(tab =>
+      tab.classList.remove("active")
+    );
+
+  document
+    .getElementById(name)
+    .classList.add("active");
+
+  button.classList.add("active");
+
+}
+
+
+/* =========================================
+   YouTube
+========================================= */
+
+function openYoutube(){
+
+  const id =
+    videos[currentIndex].id;
+
+  window.open(
+    `https://youtu.be/${id}`,
+    "_blank"
+  );
+
+}
+
+
+/* =========================================
+   Fullscreen
+========================================= */
+
+function fullscreenPlayer(){
+
+  const iframe =
+    document.getElementById("player");
+
+  if(iframe.requestFullscreen){
+
+    iframe.requestFullscreen();
+
+  }
+
+}
+
+
+/* =========================================
+   Screenshot
+========================================= */
+
+function takeScreenshot(){
+
+  /*
+    لا يمكن للمتصفح أخذ Screenshot مباشر
+    من محتوى iframe الخاص بـ YouTube بسبب
+    قيود الأمان/CORS.
+
+    لذلك نعرض تعليمات للمستخدم بدل تنفيذ
+    عملية غير موثوقة.
+  */
+
+  alert(
+    "لقطة الشاشة من داخل فيديو YouTube مباشرة تحتاج استخدام Screenshot الخاص بالجهاز أو إضافة مصدر فيديو تملكه المنصة."
+  );
+
+}
+
+
+/* =========================================
+   الإحصائيات
+========================================= */
+
+function updateStats(){
+
+  const progress = getProgress();
+
+  let total = 0;
+  let completed = 0;
+
+  videos.forEach(video=>{
+
+    const value =
+      Number(progress[video.id] || 0);
+
+    total += value;
+
+    if(value >= 100){
+      completed++;
+    }
+
+  });
+
+  const average =
+    videos.length
+      ? Math.round(total / videos.length)
+      : 0;
+
+  document.getElementById("watchedCount")
+    .textContent = completed;
+
+  document.getElementById("videoCount")
+    .textContent = videos.length;
+
+  document.getElementById("averageProgress")
+    .textContent = average + "%";
+
+  document.getElementById("overallProgress")
+    .textContent = average + "% مكتمل";
+
+}
+
+
+/* =========================================
+   الوقت
+========================================= */
+
+function formatTime(seconds){
+
+  const m =
+    Math.floor(seconds / 60)
+      .toString()
+      .padStart(2,"0");
+
+  const s =
+    Math.floor(seconds % 60)
+      .toString()
+      .padStart(2,"0");
+
+  return `${m}:${s}`;
+
+}
+
+
+/* =========================================
+   البداية
+========================================= */
+
+document.getElementById("videoCount")
+  .textContent = videos.length;
+
+renderPlaylist();
+
+playVideo(0);
+
+updateStats();
+
+</script>
+
 </body>
 </html>
